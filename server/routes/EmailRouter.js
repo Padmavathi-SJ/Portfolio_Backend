@@ -30,7 +30,7 @@ router.post("/send-email", async (req, res) => {
   const mailOptions = {
     from: email,
     to: process.env.EMAIL_USER, // Developer's Email
-    subject: `New Contact Message from ${name}`,
+    subject: `Contact new messages from ${name}`,
     text: `Sender: ${name}\nEmail: ${email}\n\nMessage:\n${message}`,
   };
 
