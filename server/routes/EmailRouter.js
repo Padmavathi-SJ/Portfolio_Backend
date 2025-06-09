@@ -1,14 +1,9 @@
 import express from "express";
 import nodemailer from "nodemailer";
 import dotenv from "dotenv";
-import cors from "cors";
-
 
 dotenv.config();
-app.use(express.json());
-app.use(cors());
-
-const router = express.Router();
+const router = express.Router();  // Create router instead of using app
 
 // Configure Nodemailer Transporter
 const transporter = nodemailer.createTransport({
@@ -29,7 +24,7 @@ router.post("/send-email", async (req, res) => {
 
   const mailOptions = {
     from: email,
-    to: process.env.EMAIL_USER, // Developer's Email
+    to: process.env.EMAIL_USER,
     subject: `Contact new messages from ${name}`,
     text: `Sender: ${name}\nEmail: ${email}\n\nMessage:\n${message}`,
   };

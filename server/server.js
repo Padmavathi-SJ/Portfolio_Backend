@@ -14,7 +14,9 @@ app.use(express.json());
 app.use(cors(corsOptions));
 
 // Routes
-app.use("/api", emailRoutes);
+app.use("/api", emailRoutes);  // This will mount all emailRoutes under /api
+
+// ... rest of your server.js code (health checks, etc.)
 
 // Health Check Endpoint
 app.get("/health", (req, res) => {
