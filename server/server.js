@@ -5,7 +5,7 @@ import emailRoutes from "./routes/EmailRouter.js";
 const app = express();
 
 const corsOptions = {
-  origin: 'https://your-frontend-domain.com',
+  origin: 'https://client-wgks.onrender.com',
   optionsSuccessStatus: 200
 }
 
