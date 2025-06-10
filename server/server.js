@@ -4,8 +4,12 @@ import emailRoutes from "./routes/EmailRouter.js";
 
 const app = express();
 
+// CORS Configuration
 const corsOptions = {
-  origin: 'https://client-wgks.onrender.com',
+  origin: [
+    'https://client-wgks.onrender.com',
+    'http://localhost:3000' // For local testing
+  ],
   optionsSuccessStatus: 200
 }
 
@@ -13,10 +17,9 @@ const corsOptions = {
 app.use(express.json());
 app.use(cors(corsOptions));
 
-// Routes
-app.use("/api", emailRoutes);  // This will mount all emailRoutes under /api
-
-// ... rest of your server.js code (health checks, etc.)
+// Routes - mounted at root level for testing
+app.use("/", emailRoutes);
+app.use("/api", emailRoutes); // Also available under /api
 
 // Health Check Endpoint
 app.get("/health", (req, res) => {
@@ -36,7 +39,7 @@ app.get("/deployment-status", (req, res) => {
       environment: process.env.NODE_ENV || "development",
       port: process.env.PORT || 5000,
       corsEnabled: true,
-      allowedOrigin: corsOptions.origin
+      allowedOrigins: corsOptions.origin
     }
   });
 });
@@ -55,6 +58,27 @@ app.get("/", (req, res) => {
   `);
 });
 
+// Error Handling Middleware
+app.use((req, res, next) => {
+  res.status(404).json({ 
+    error: "Route not found",
+    availableRoutes: {
+      root: "/",
+      health: "/health",
+      deploymentStatus: "/deployment-status",
+      api: "/api"
+    }
+  });
+});
+
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ 
+    error: "Something went wrong!",
+    message: err.message 
+  });
+});
+
 // Start Server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
@@ -64,6 +88,7 @@ app.listen(PORT, () => {
   ===========================================
   Health Check: http://localhost:${PORT}/health
   Deployment Status: http://localhost:${PORT}/deployment-status
+  API Base URL: http://localhost:${PORT}/api
   
   Backend successfully deployed and operational!
   `);
